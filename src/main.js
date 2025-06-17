@@ -4,6 +4,7 @@ function createWindow() {
     const win = new BrowserWindow({
         width: 1500,
         height: 900,
+        icon: 'assets/pictures/framble.png',
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
