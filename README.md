@@ -3,7 +3,7 @@
 Simple browser with less automation.
 
 App built using HTML to render HTML.
-Pretty stupid, but just a fun little exercise.
+Pretty stupid, but just a fun little project.
 
 ## How to run
 

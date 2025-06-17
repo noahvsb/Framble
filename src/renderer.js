@@ -1,8 +1,9 @@
-const input = document.getElementById('urlInput');
-const content = document.getElementById('content');
+const addressBar = document.getElementById('addressBar');
+const renderFrame = document.getElementById('renderFrame');
 
-input.addEventListener('keydown', (e) => {
+addressBar.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
-        content.textContent = input.value;
+        const input = addressBar.value.trim();
+        renderFrame.srcdoc = `${input}`;
     }
 });

@@ -3,16 +3,21 @@ body {
     padding: 20px;
 }
 
-input {
+.container {
     width: 100%;
-    font-size: 16px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
     padding: 8px;
 }
 
-#content {
-    margin-top: 20px;
-    white-space: pre-wrap;
-    border: 1px solid #ccc;
-    padding: 10px;
+.navigation {
+    margin-bottom: 20px;
+}
+
+.content {
     min-height: 100px;
+}
+
+#addressBar {
+    font-size: 16px;
 }
