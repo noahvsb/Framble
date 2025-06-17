@@ -1,6 +1,5 @@
 body {
     font-family: Arial, sans-serif;
-    padding: 20px;
 }
 
 .container {
@@ -11,7 +10,12 @@ body {
 }
 
 .navigation {
-    margin-bottom: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 1000;
 }
 
 #addressBar {
