@@ -14,10 +14,10 @@ body {
     margin-bottom: 20px;
 }
 
-.content {
-    min-height: 100px;
-}
-
 #addressBar {
     font-size: 16px;
+}
+
+#renderFrame {
+    height: 700px;
 }
