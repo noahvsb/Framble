@@ -1,7 +1,28 @@
 const addressBar = document.getElementById('addressBar');
 const content = document.getElementById('content');
 
+function validationCheck(url) {
+    try {
+        const parsed = new URL(url);
+
+        // only http(s) allowed
+        if (!['http:', 'https:'].includes(parsed.protocol)) return false;
+
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
 async function renderPage(url) {
+    if (!validationCheck(url)) {
+        content.innerHTML = `
+            <h1>Invalid url</h1>
+            <p>${url}</p>
+        `;
+        return;
+    }
+
     try {
         content.innerHTML = `
             <h1>Loading...</h1>
@@ -14,24 +35,25 @@ async function renderPage(url) {
                 <h1>${response.status}</h1>
                 <p>${response.statusText}</p>
             `;
-        } else {
-            const html = await response.text();
+            return;
+        } 
 
-            content.innerHTML = html;
+        const html = await response.text();
 
-            // handle hyperlinks
-            content.querySelectorAll('a').forEach(anchor => {
-                anchor.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const href = anchor.getAttribute('href');
-                    if (href && !href.startsWith('javascript:')) {
-                        const newUrl = new URL(href, url).toString();
-                        addressBar.value = newUrl;
-                        renderPage(newUrl);
-                    }
-                });
+        content.innerHTML = html;
+
+        // handle hyperlinks
+        content.querySelectorAll('a').forEach(anchor => {
+            anchor.addEventListener('click', (e) => {
+                e.preventDefault();
+                const href = anchor.getAttribute('href');
+                if (href && !href.startsWith('javascript:')) {
+                    const newUrl = new URL(href, url).toString();
+                    addressBar.value = newUrl;
+                    renderPage(newUrl);
+                }
             });
-        }
+        });
     } catch (error) {
         content.innerHTML = `
             <h1>Error</h1>
