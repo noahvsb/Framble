@@ -19,6 +19,7 @@ async function renderPage(url) {
         content.innerHTML = `
             <h1>Invalid url</h1>
             <p>${url}</p>
+            <img src="assets/images/sad.gif" alt="sad.gif" style="width:200px; transition: transform 0.5s;">
         `;
         return;
     }
@@ -34,6 +35,7 @@ async function renderPage(url) {
             content.innerHTML = `
                 <h1>${response.status}</h1>
                 <p>${response.statusText}</p>
+                <img src="assets/images/sad.gif" alt="sad.gif" style="width:200px; transition: transform 0.5s;">
             `;
             return;
         } 
@@ -58,6 +60,7 @@ async function renderPage(url) {
         content.innerHTML = `
             <h1>Error</h1>
             <p>${error.message}</p>
+            <img src="assets/images/sad.gif" alt="sad.gif" style="width:200px; transition: transform 0.5s;">
         `;
     }
 }
