@@ -14,29 +14,50 @@ function validationCheck(url) {
     }
 }
 
-const statusHTML = (header, paragraph, gif) => `
-    <div style="padding: 15px">
-        <h1>${header}</h1>
-        ${paragraph ? `<p>${paragraph}</p>` : ""}
-        ${gif ? `<img src="assets/images/sad.gif" alt="sad.gif" style="width:200px; transition: transform 0.5s;">` : ""}
-    </div>
-`;
+function setStatusMessage(header, paragraph, gif) {
+    const paddedWrapper = document.createElement("div");
+    paddedWrapper.style.padding = "20px";
+
+    const headerElement = document.createElement("h1");
+    headerElement.textContent = header;
+
+    paddedWrapper.appendChild(headerElement);
+
+    if (paragraph) {
+        const paragraphElement = document.createElement("p");
+        paragraphElement.textContent = paragraph;
+
+        paddedWrapper.appendChild(paragraphElement);
+    }
+
+    if (gif) {
+        const gifElement = document.createElement("img");
+        gifElement.setAttribute("src", "assets/images/sad.gif");
+        gifElement.setAttribute("alt", "sad.gif");
+        gifElement.style.width = "200px";
+
+        paddedWrapper.appendChild(gifElement);
+    }
+
+    content.innerHTML = "";
+    content.appendChild(paddedWrapper);
+}
 
 async function loadPage(url) {
     if (!validationCheck(url)) {
         // TODO: give option to search with google (https://www.google.com/search?q=${url})
         // TODO: give option to go to http(s)://${url}
-        content.innerHTML = statusHTML("Invalid url", url, true);
+        setStatusMessage("Invalid url", url, true);
         return;
     }
 
     try {
-        content.innerHTML = statusHTML("Loading..."); // TODO: replace with loading indicator next to address bar
+        setStatusMessage("Loading..."); // TODO: replace with loading indicator next to address bar
 
         const response = await fetch(url); // TODO: negotiate content type
           
         if (!response.ok) {
-            content.innerHTML = statusHTML(response.status, response.statusText, true);
+            setStatusMessage(response.status, response.statusText, true);
             return;
         }
 
@@ -63,7 +84,7 @@ async function loadPage(url) {
             loadPage(e.url);
         });
     } catch (error) {
-        content.innerHTML = statusHTML("Error", error.message, true);
+        setStatusMessage("Error", error.message, true);
     }
 }
 
