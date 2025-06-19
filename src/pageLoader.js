@@ -5,8 +5,6 @@ function validationCheck(url) {
     try {
         const parsed = new URL(url);
 
-        console.log(parsed);
-
         // only http(s) allowed
         if (!['http:', 'https:'].includes(parsed.protocol)) return false;
 
@@ -26,6 +24,8 @@ const statusHTML = (header, paragraph, gif) => `
 
 async function loadPage(url) {
     if (!validationCheck(url)) {
+        // TODO: give option to search with google (https://www.google.com/search?q=${url})
+        // TODO: give option to go to http(s)://${url}
         content.innerHTML = statusHTML("Invalid url", url, true);
         return;
     }
@@ -42,10 +42,11 @@ async function loadPage(url) {
 
         // TODO: check content type
 
-        const webview = document.createElement('webview');
-        webview.setAttribute('src', url);
-        webview.setAttribute('allowpopups', '');
-        webview.setAttribute('id', 'webview');
+        const webview = document.createElement("webview");
+        webview.setAttribute("src", url);
+        webview.setAttribute("allowpopups", true);
+        webview.style.flex = "1";
+        webview.style.display = "flex";
 
         content.innerHTML = ''; // clear loading
         content.appendChild(webview);
