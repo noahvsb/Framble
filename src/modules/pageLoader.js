@@ -1,49 +1,8 @@
-const { ipcRenderer } = require('electron');
-
-console.log = (...args) => {
-    ipcRenderer.send('renderer-log', ...args);
-};
-
-console.error = (...args) => {
-    ipcRenderer.send('renderer-error', ...args);
-};
+import validationCheck from "./validationCheck.js";
+import { showLoadingSpinner, hideLoadingSpinner } from "./loadingSpinner.js";
 
 const addressBar = document.getElementById("addressBar");
 const content = document.getElementById("content");
-const loadingSpinner = document.getElementById('loadingSpinner');
-
-function showLoadingSpinner() {
-    loadingSpinner.style.visibility = 'visible';
-}
-
-function hideLoadingSpinner() {
-    loadingSpinner.style.visibility = 'hidden';
-}
-
-function validationCheck(url) {
-    console.log(`validation check on: ${url}`);
-    try {
-        const parsed = new URL(url);
-
-        // only http(s) allowed
-        if (!["http:", "https:"].includes(parsed.protocol)) {
-            console.log("validation failed: not a http(s) protocol");
-            return false;
-        }
-
-        // check if hostname includes a dot (.)
-        if (!parsed.hostname.includes('.')) {
-            console.log("validation failed: hostname missing dot (.)");
-            return false;
-        }
-        
-        console.log("validation success");
-        return true;
-    } catch {
-        console.log("validation failed: url parsing error");
-        return false;
-    }
-}
 
 function setStatusMessage(header, paragraph, gif) {
     const paddedWrapper = document.createElement("div");
@@ -125,10 +84,4 @@ async function loadPage(url) {
     }
 }
 
-addressBar.addEventListener('keydown', async (e) => {
-    if (e.key === 'Enter') {
-        const url = addressBar.value.trim();
-        
-        loadPage(url);
-    }
-});
+export default loadPage;

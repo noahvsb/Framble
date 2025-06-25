@@ -23,11 +23,11 @@ app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit();
 });
 
-// handle renderer logs and errors
-ipcMain.on('renderer-log', (event, ...args) => {
+// handle renderer log and error events
+ipcMain.on('renderer-log', (_event, ...args) => {
     console.log('[Renderer LOG]', ...args);
 });
 
-ipcMain.on('renderer-error', (event, ...args) => {
+ipcMain.on('renderer-error', (_event, ...args) => {
     console.error('[Renderer ERROR]', ...args);
 });
