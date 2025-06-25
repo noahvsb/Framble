@@ -1,6 +1,6 @@
 # ![framble](assets/images/framble.png) Framble 
 
-Simple browser with less automation.
+A very simple browser, all in one tab. Content negotiation coming soon.
 
 App built using HTML to render HTML using Electron.
 Pretty stupid, but just a fun little project.
