@@ -1,37 +1,44 @@
 class URLStack {
-  constructor() {
-    this.urls = []; 
-  }
-
-  push(url) {
-    this.urls.push(url);
-  }
-
-  pop() {
-    if (this.isEmpty()) {
-      return null; 
+    constructor() {
+        this.urls = []; 
+        this.pos = -1;
     }
-    return this.urls.pop();
-  }
 
-  peek() {
-    if (this.isEmpty()) {
-      return null; 
+    push(url) {
+        this.pos++;
+        this.urls.splice(this.pos); // after pushing once, don't allow to goForward anymore
+        this.urls.push(url);
     }
-    return this.urls[this.size() - 1];
-  }
 
-  isEmpty() {
-    return this.size() === 0;
-  }
+    goBack() {
+        if (!this.canGoBack) return null;
 
-  size() {
-    return this.urls.length;
-  }
+        this.pos--;
+        return this.urls[this.pos];
+    }
 
-  print() {
-    console.log(this.urls);
-  }
+    canGoBack() {
+        return this.pos > 0;
+    }
+
+    goForward() {
+        if (!this.canGoForward) return null;
+
+        this.pos++;
+        return this.urls[this.pos];
+    }
+
+    canGoForward() {
+        return this.pos < this.size() - 1;
+    }
+
+    size() {
+        return this.urls.length;
+    }
+
+    print() {
+        console.log(`url stack - pos: ${this.pos} [${this.urls}]`);
+    }
 }
 
 const urlStack = new URLStack();

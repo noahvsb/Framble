@@ -1,5 +1,5 @@
 import urlStack from "./modules/urlStack.js";
-import loadPage from "./modules/pageLoader.js";
+import { loadPage, pushAndLoadPage } from "./modules/pageLoader.js";
 
 // send renderer log and error events
 const { ipcRenderer } = require("electron");
@@ -18,18 +18,22 @@ const backButton = document.getElementById("backButton");
 const forwardButton = document.getElementById("forwardButton");
 
 export function updateButtonStates() {
-    const isDisabled = urlStack.isEmpty() || webview === undefined;
-
-    backButton.disabled = isDisabled;
-    forwardButton.disabled = isDisabled || urlStack.peek() === getUrl();
+    backButton.disabled = !urlStack.canGoBack();
+    forwardButton.disabled = !urlStack.canGoForward();
 }
 
 backButton.addEventListener("click", () => {
-    
+    const url = urlStack.goBack();
+    addressBar.value = url;
+    urlStack.print();
+    loadPage(url);
 });
 
 forwardButton.addEventListener("click", () => {
-    
+    const url = urlStack.goForward();
+    addressBar.value = url;
+    urlStack.print();
+    loadPage(url);
 });
 
 // address bar
@@ -45,8 +49,7 @@ addressBar.addEventListener("keydown", async (e) => {
             addressBar.value = url;
         }
         
-        loadPage(url);
-        urlStack.print();
+        pushAndLoadPage(url);
     }
 });
 

@@ -35,9 +35,7 @@ function setStatusMessage(header, paragraph, gif) {
     content.appendChild(paddedWrapper);
 }
 
-async function loadPage(url) {
-    urlStack.push(url);
-
+export async function loadPage(url) {
     if (!validationCheck(url)) {
         // check if adding https:// fixes it (http not supported in this way)
         if (validationCheck(`https://${url}`)) {
@@ -75,13 +73,13 @@ async function loadPage(url) {
         webview.addEventListener('will-navigate', (e) => {
             e.preventDefault();
             addressBar.value = e.url;
-            loadPage(e.url);
+            pushAndLoadPage(e.url);
         });
 
         webview.addEventListener('new-window', (e) => {
             e.preventDefault();
             addressBar.value = e.url;
-            loadPage(e.url);
+            pushAndLoadPage(e.url);
         });
     } catch (error) {
         hideLoadingSpinner();
@@ -91,4 +89,8 @@ async function loadPage(url) {
     updateButtonStates();
 }
 
-export default loadPage;
+export function pushAndLoadPage(url) {
+    urlStack.push(url);
+    urlStack.print(url);
+    loadPage(url);
+}
