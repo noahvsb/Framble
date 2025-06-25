@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 
 function createWindow() {
     const win = new BrowserWindow({
@@ -21,4 +21,13 @@ app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit();
+});
+
+// handle renderer logs and errors
+ipcMain.on('renderer-log', (event, ...args) => {
+    console.log('[Renderer LOG]', ...args);
+});
+
+ipcMain.on('renderer-error', (event, ...args) => {
+    console.error('[Renderer ERROR]', ...args);
 });
