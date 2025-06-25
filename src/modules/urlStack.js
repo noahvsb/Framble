@@ -34,5 +34,7 @@ class URLStack {
   }
 }
 
-export default { URLStack };
+const urlStack = new URLStack();
+
+export default urlStack;
 

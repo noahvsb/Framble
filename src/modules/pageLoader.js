@@ -1,5 +1,7 @@
+import urlStack from "./urlStack.js";
 import validationCheck from "./validationCheck.js";
 import { showLoadingSpinner, hideLoadingSpinner } from "./loadingSpinner.js";
+import { updateButtonStates } from "../handler.js";
 
 const addressBar = document.getElementById("addressBar");
 const content = document.getElementById("content");
@@ -34,14 +36,15 @@ function setStatusMessage(header, paragraph, gif) {
 }
 
 async function loadPage(url) {
-    if (!validationCheck(url)) {
-        // TODO: give option to search with google (https://www.google.com/search?q=${url})
+    urlStack.push(url);
 
+    if (!validationCheck(url)) {
         // check if adding https:// fixes it (http not supported in this way)
         if (validationCheck(`https://${url}`)) {
             url = `https://${url}`;
         } else {
             setStatusMessage("Invalid url", url, true);
+            updateButtonStates();
             return;
         }
     }
@@ -53,12 +56,14 @@ async function loadPage(url) {
           
         if (!response.ok) {
             setStatusMessage(response.status, response.statusText, true);
+            updateButtonStates();
             return;
         }
 
         // TODO: check content type
 
         const webview = document.createElement("webview");
+        webview.setAttribute("id", "webview");
         webview.setAttribute("src", url);
         webview.setAttribute("allowpopups", true);
         webview.style.flex = "1";
@@ -82,6 +87,8 @@ async function loadPage(url) {
         hideLoadingSpinner();
         setStatusMessage("Error", error.message, true);
     }
+
+    updateButtonStates();
 }
 
 export default loadPage;
