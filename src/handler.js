@@ -24,8 +24,18 @@ document.getElementById('forwardButton').addEventListener('click', () => {
 // address bar
 document.getElementById("addressBar").addEventListener('keydown', async (e) => {
     if (e.key === 'Enter') {
-        const url = addressBar.value.trim();
+        let url = addressBar.value.trim();
+
+        // google search when shift + enter is pressed
+        if (e.shiftKey) {
+            url = googleSearchUrl(url);
+            addressBar.value = url;
+        }
         
         loadPage(url);
     }
 });
+
+function googleSearchUrl(url) {
+    return `https://google.com/search?q=${url.replaceAll(" ", "+")}`;
+}
