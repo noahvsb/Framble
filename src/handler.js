@@ -13,7 +13,6 @@ console.error = (...args) => {
 };
 
 // back and forward buttons
-const webview = document.getElementById("webview");
 const backButton = document.getElementById("backButton");
 const forwardButton = document.getElementById("forwardButton");
 

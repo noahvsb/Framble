@@ -50,7 +50,6 @@ export async function loadPage(url) {
     try {
         showLoadingSpinner();
         const response = await fetch(url); // TODO: negotiate content type
-        hideLoadingSpinner();
           
         if (!response.ok) {
             setStatusMessage(response.status, response.statusText, true);
@@ -58,12 +57,11 @@ export async function loadPage(url) {
             return;
         }
 
-        // TODO: check content type
+        // TODO: check content type and give correct representation
 
         const webview = document.createElement("webview");
         webview.setAttribute("id", "webview");
         webview.setAttribute("src", url);
-        webview.setAttribute("allowpopups", true);
         webview.style.flex = "1";
         webview.style.display = "flex";
 
@@ -80,6 +78,13 @@ export async function loadPage(url) {
             e.preventDefault();
             addressBar.value = e.url;
             pushAndLoadPage(e.url);
+        });
+
+        webview.addEventListener('did-stop-loading', () => {
+            hideLoadingSpinner();
+
+            // remove all target="_blank" attributes from <a> elements
+            webview.executeJavaScript(`document.querySelectorAll('a[target="_blank"]').forEach(link => link.removeAttribute("target"));`);
         });
     } catch (error) {
         hideLoadingSpinner();
