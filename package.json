@@ -4,8 +4,8 @@
   "description": "Simple browser with less automation",
   "main": "src/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-builder"
   },
   "repository": {
     "type": "git",
@@ -19,10 +19,27 @@
   },
   "homepage": "https://github.com/noahvsb/Framble#readme",
   "devDependencies": {
-    "electron": "^36.4.0"
+    "electron": "^36.4.0",
+    "electron-builder": "^26.0.12"
   },
   "dependencies": {
     "@ghostery/adblocker-electron": "^2.8.0",
     "electron-fetch": "^1.9.1"
+  },
+  "build": {
+    "appId": "com.noahvsb.framble",
+    "productName": "Framble",
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "index.html",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "directories": {
+      "buildResources": "assets"
+    }
   }
 }

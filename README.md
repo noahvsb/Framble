@@ -16,7 +16,7 @@ Due to the limit of a single tab, some features won't work. Framble does however
 ## How to run
 
 - Install modules with `npm install`
-- Run using `npm start`
+- Run using `npm start` or build using `npm run build` (build doesn't include the icon currently)
 
 ## Notes
 
