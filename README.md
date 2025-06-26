@@ -13,3 +13,7 @@ Due to security reasons some services aren't accessible, like google login.
 
 - Install modules with `npm install`
 - Run using `npm start`
+
+## Notes
+
+- When running, you will see a message stating that 2 functions that are used are deprecated, this is due to the adblocker package I'm using. I made an [issue](https://github.com/ghostery/adblocker/issues/4981) in the corresponding github to address this.

@@ -20,5 +20,9 @@
   "homepage": "https://github.com/noahvsb/Framble#readme",
   "devDependencies": {
     "electron": "^36.4.0"
+  },
+  "dependencies": {
+    "@ghostery/adblocker-electron": "^2.8.0",
+    "electron-fetch": "^1.9.1"
   }
 }
