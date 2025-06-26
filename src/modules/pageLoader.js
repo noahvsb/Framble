@@ -4,6 +4,7 @@ import { showLoadingSpinner, hideLoadingSpinner } from "./loadingSpinner.js";
 import { updateButtonStates } from "../handler.js";
 
 const addressBar = document.getElementById("addressBar");
+const contentTypeSelect = document.getElementById("contentTypeSelect");
 const content = document.getElementById("content");
 
 function setStatusMessage(header, paragraph, gif) {
@@ -31,8 +32,7 @@ function setStatusMessage(header, paragraph, gif) {
         paddedWrapper.appendChild(gifElement);
     }
 
-    content.innerHTML = "";
-    content.appendChild(paddedWrapper);
+    content.replaceChildren(paddedWrapper);
 }
 
 export async function loadPage(url) {
@@ -49,44 +49,75 @@ export async function loadPage(url) {
 
     try {
         showLoadingSpinner();
-        const response = await fetch(url); // TODO: negotiate content type
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "Accept": contentTypeSelect.value
+            }
+        });
           
         if (!response.ok) {
+            console.log("fetch failed: status code", response.status);
             setStatusMessage(response.status, response.statusText, true);
             updateButtonStates();
             return;
         }
+        
+        console.log("fetch success");
 
-        // TODO: check content type and give correct representation
+        const contentType = response.headers.get("Content-Type");
 
-        const webview = document.createElement("webview");
-        webview.setAttribute("id", "webview");
-        webview.setAttribute("src", url);
-        webview.style.flex = "1";
-        webview.style.display = "flex";
+        console.log("Content-Type:", contentType);
 
-        content.innerHTML = ''; // clear loading
-        content.appendChild(webview);
+        if (!contentType) {
+            setStatusMessage("No content type provided", "This website sucks");
+            updateButtonStates();
+            return;
+        }
 
-        webview.addEventListener('will-navigate', (e) => {
-            e.preventDefault();
-            addressBar.value = e.url;
-            pushAndLoadPage(e.url);
-        });
+        if (contentType.includes("text/html")) {
+            // TODO: reuse webview and set display: none when not using it
+            const webview = document.createElement("webview");
+            webview.setAttribute("id", "webview");
+            webview.setAttribute("src", url);
+            webview.style.flex = "1";
+            webview.style.display = "flex";
 
-        webview.addEventListener('new-window', (e) => {
-            e.preventDefault();
-            addressBar.value = e.url;
-            pushAndLoadPage(e.url);
-        });
+            content.replaceChildren(webview);
 
-        webview.addEventListener('did-stop-loading', () => {
+            webview.addEventListener('will-navigate', (e) => {
+                e.preventDefault();
+                addressBar.value = e.url;
+                pushAndLoadPage(e.url);
+            }, { once: true });
+
+            webview.addEventListener('new-window', (e) => {
+                e.preventDefault();
+                addressBar.value = e.url;
+                pushAndLoadPage(e.url);
+            }, { once: true });
+
+            webview.addEventListener('did-finish-load', () => {
+                hideLoadingSpinner();
+
+                // remove all target="_blank" attributes from <a> elements
+                webview.executeJavaScript(`document.querySelectorAll('a[target="_blank"]').forEach(link => link.removeAttribute("target"));`);
+            }, { once: true });
+        } else if (contentType.includes("application/json")) {
+            const json = await response.json();
+
+            const pre = document.createElement("pre");
+            pre.textContent = JSON.stringify(json, null, 2);
+            pre.style.overflow = "auto";
+            pre.style.fontFamily = "monospace";
+            pre.style.whiteSpace = "pre-wrap";
+
+            content.replaceChildren(pre);
+
             hideLoadingSpinner();
-
-            // remove all target="_blank" attributes from <a> elements
-            webview.executeJavaScript(`document.querySelectorAll('a[target="_blank"]').forEach(link => link.removeAttribute("target"));`);
-        });
+        }
     } catch (error) {
+        console.log("fetch failed: error");
         hideLoadingSpinner();
         setStatusMessage("Error", error.message, true);
     }
