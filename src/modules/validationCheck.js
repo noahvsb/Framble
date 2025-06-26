@@ -1,5 +1,7 @@
+import shortUrl from "./shortUrl.js";
+
 function validationCheck(url) {
-    console.log(`validation check on: ${url}`);
+    console.log(`validation check on: ${shortUrl(url)}`);
     try {
         const parsed = new URL(url);
 

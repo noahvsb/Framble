@@ -1,3 +1,5 @@
+import shortUrl from "./shortUrl.js";
+
 class URLStack {
     constructor() {
         this.urls = []; 
@@ -37,7 +39,7 @@ class URLStack {
     }
 
     print() {
-        console.log(`url stack - pos: ${this.pos} [${this.urls}]`);
+        console.log(`url stack - pos: ${this.pos} [${(this.urls).map(shortUrl)}]`);
     }
 }
 

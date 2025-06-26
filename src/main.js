@@ -2,6 +2,8 @@ const { app, BrowserWindow, ipcMain, session } = require('electron');
 const { ElectronBlocker } = require('@ghostery/adblocker-electron');
 const fetch = require('electron-fetch').default;
 
+const shortUrl = require('./modules/shortUrl.js').default;
+
 async function createWindow() {
     // adblocker
     const blocker = await ElectronBlocker.fromPrebuiltAdsAndTracking(fetch);
@@ -9,7 +11,7 @@ async function createWindow() {
 
     // log
     blocker.on('request-blocked', (request) => {
-        console.log('[LOG] Blocked:', request.url);
+        console.log('[LOG] Blocked:', shortUrl(request.url));
     });
 
     const win = new BrowserWindow({
